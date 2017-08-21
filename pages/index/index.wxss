@@ -9,4 +9,18 @@ view {
   display: flex;
   height: 100%;
   flex-direction: column;
+  position: relative;
+}
+
+.user {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+}
+
+.user-img {
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+  border: 2px solid #fff;
 }

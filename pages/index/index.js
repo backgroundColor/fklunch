@@ -33,7 +33,15 @@ Page({
         height: 50
       },
       clickable: true
-    }]
+    }],
+    user: {
+      icon: '',
+      name: '鸡腿'
+    },
+    position: {
+      latitude: 39.5427,
+      longitude: 116.2317
+    }
   },
   regionchange(e) {
     console.log(e.type)
@@ -46,18 +54,40 @@ Page({
   },
   onLoad:function(options){
     // 页面初始化 options为页面跳转所带来的参数
-    // for wechat login get user message
     var that = this;
+    // for wechat login get user message
     wx.login({
       success: function () {
         wx.getUserInfo({
           success: function (res) {
             console.log('login: ', res)
+            that.setData({
+              user: {
+                icon: res.userInfo.avatarUrl,
+                name: res.userInfo.nickName
+              }
+            })
           }
         })
       },
       fail: function (res) {
-        console.log(res)
+        console.log('login_fail: ', res)
+      },
+      complete: function (res) {
+        console.info('login_complete: ', res)
+        // wx getlocation
+        wx.getLocation({
+          type: 'wgs84',
+          success: function (res) {
+            console.info('location_wgs84: ', res);
+            that.setData({
+              position: {
+                latitude: res.latitude,
+                longitude: res.longitude
+              }
+            })
+          }
+        })
       }
     })
 
