@@ -3,37 +3,11 @@ var QQMapWX = require('../../libs/qqmap-wx-jssdk.min.js');
 var qqmapsdk;
 Page({
   data:{
-    markers: [{
-      iconPath: "/resources/others.png",
-      id: 0,
-      latitude: 23.099994,
-      longitude: 113.324520,
-      width: 50,
-      height: 50
-    }],
-    polyline: [{
-      points: [{
-        longitude: 113.3245211,
-        latitude: 23.10229
-      }, {
-        longitude: 113.324520,
-        latitude: 23.21229
-      }],
-      color:"#FF0000DD",
-      width: 2,
-      dottedLine: true
-    }],
-    controls: [{
-      id: 1,
-      iconPath: '/resources/location.png',
-      position: {
-        left: 0,
-        top: 300 - 50,
-        width: 50,
-        height: 50
-      },
-      clickable: true
-    }],
+    pages: 1,
+    distance: 500,
+    markers: [],
+    circles: [],
+    controls:[],
     user: {
       icon: '',
       name: '鸡腿'
@@ -50,9 +24,71 @@ Page({
     console.log(e.markerId)
   },
   controltap(e) {
-    console.log(e.controlId)
+    console.log(e.controlId);
+    this.reloadData();
+  },
+  reloadData () {
+    var getRandomInitPage = function (min, max) {
+      min = Math.ceil(min);
+      max = Math.floor(max);
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    };
+    this.getMarkers(this.data.position.latitude, this.data.position.longitude, getRandomInitPage(1, this.data.pages))
+  },
+  getMarkers (lat, lng, index, distance) {
+    var that = this;
+    qqmapsdk.search({
+      keyword: '餐饮',
+      location: {
+        latitude: lat,
+        longitude: lng
+      },
+      distance: distance || 500,
+      page_size: 20,
+      page_index: index || 1,
+      success: function (res) {
+        console.log('success: ', res);
+        that.setData({
+          circles: [
+            {
+              latitude: lat,
+              longitude: lng,
+              radius: 500,
+              color: '#87CEEBAA',
+              fillColor: '#7cb5ec99'
+            }
+          ],
+          position: {
+            latitude: lat,
+            longitude: lng,
+          },
+          pages: Math.floor(res.count / 20),
+          markers: res.data.length !== 0
+          ? res.data.map((lunch, i) => {
+            return {
+              iconPath: "./food.svg",
+              id: i,
+              latitude: lunch.location.lat,
+              longitude: lunch.location.lng,
+              height: 10
+            }
+          })
+          : []
+        })
+      },
+      fail: function (res) {
+        console.log('fail: ', res);
+        return that.setData({ markers: [] })
+      },
+      complete: function (res) {
+        console.log('complete: ', res)
+      }
+    })
   },
   onLoad:function(options){
+    qqmapsdk = new QQMapWX({
+            key: 'OVLBZ-AQJ64-LDGUH-X4EAG-HJSHS-CDBDL'
+        });
     // 页面初始化 options为页面跳转所带来的参数
     var that = this;
     // for wechat login get user message
@@ -74,44 +110,29 @@ Page({
         console.log('login_fail: ', res)
       },
       complete: function (res) {
-        console.info('login_complete: ', res)
         // wx getlocation
         wx.getLocation({
-          type: 'wgs84',
+          type: 'gcj02',
           success: function (res) {
-            console.info('location_wgs84: ', res);
-            that.setData({
-              position: {
-                latitude: res.latitude,
-                longitude: res.longitude
-              }
-            })
+            console.info('location_gcj02: ', res);
+            console.info('markers: ', that.getMarkers(res.latitude, res.longitude));
+            that.getMarkers(res.latitude, res.longitude)
+          },
+          fail: function (res) {
+            console.error(res);
+          },
+          complete: function (res) {
+            console.log('location_complete: ', res)
           }
         })
       }
     })
-
-    qqmapsdk = new QQMapWX({
-            key: 'OVLBZ-AQJ64-LDGUH-X4EAG-HJSHS-CDBDL'
-        });
   },
   onReady:function(){
     // 页面渲染完成
   },
   onShow:function(){
     // 页面显示
-    qqmapsdk.search({
-      keyword: '餐饮',
-      success: function (res) {
-        console.log('success: ', res);
-      },
-      fail: function (res) {
-        console.log('fail: ', res);
-      },
-      complete: function (res) {
-        console.log('complete: ', res)
-      }
-    })
   },
   onHide:function(){
     // 页面隐藏

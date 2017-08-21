@@ -6,21 +6,32 @@ view {
 }
 
 .main {
-  display: flex;
   height: 100%;
+  display: flex;
   flex-direction: column;
-  position: relative;
 }
-
-.user {
-  position: fixed;
-  top: 10px;
-  right: 10px;
-}
-
-.user-img {
+.user-info {
   height: 30px;
-  width: 30px;
-  border-radius: 50%;
-  border: 2px solid #fff;
+  border-bottom: 1px solid #ccc;
+  padding: 5px 10px;
+}
+
+.footer {
+  height: 40px;
+  padding: 10px;
+}
+
+.left {
+  float: left;
+  margin-right: 10px;
+}
+
+.button {
+  position: fixed;
+  width: 50%;
+  bottom: 30px;
+  left: 50%;
+  z-index: 9999;
+  transform: translateX(-50%);
+  -webkit-transform: translateX(-50%);
 }
