@@ -1,7 +1,12 @@
-.window{
-    color: #49bb16;
+page {
+  height: 100%;
+}
+view {
+  height: 100%;
 }
 
-.window-new{
-    color: #D23933;
+.main {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
 }
