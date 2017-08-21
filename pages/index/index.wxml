@@ -4,14 +4,16 @@
       <image src="{{user.icon}}" style="width: 30px; height: 30px"></image>
       <view style="float: right">
         500M
-        <switch bindchange="switch2Change" size="small" />
+        <switch bindchange="distanceChange" size="small" />
         1000M
       </view>
     </view>
-    <map id="map" longitude="{{position.longitude}}" latitude="{{position.latitude}}" scale="16"
-    controls="{{controls}}" bindcontroltap="controltap" markers="{{markers}}"
-    bindmarkertap="markertap" bindregionchange="regionchange"
-    show-location style="width: 100%; flex: 1" circles="{{circles}}" ></map>
+    <view class="mapbox {{loading}}">
+      <map id="map" longitude="{{position.longitude}}" latitude="{{position.latitude}}" scale="16"
+      controls="{{controls}}" bindcontroltap="controltap" markers="{{markers}}"
+      bindmarkertap="markertap" bindregionchange="regionchange"
+      show-location style="width: 100%; height: 100%" circles="{{circles}}" ></map>
+    </view>
     <view class="footer">
       <view class="left">
         <button size="small" type="warn" bindtap="reloadData">

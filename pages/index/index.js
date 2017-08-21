@@ -4,7 +4,9 @@ var qqmapsdk;
 Page({
   data:{
     pages: 1,
+    index: 1,
     distance: 500,
+    loading: '',
     markers: [],
     circles: [],
     controls:[],
@@ -33,10 +35,17 @@ Page({
       max = Math.floor(max);
       return Math.floor(Math.random() * (max - min + 1)) + min;
     };
-    this.getMarkers(this.data.position.latitude, this.data.position.longitude, getRandomInitPage(1, this.data.pages))
+    this.getMarkers(this.data.position.latitude, this.data.position.longitude, getRandomInitPage(1, this.data.pages), this.data.distance)
+  },
+  distanceChange (e) {
+    console.info(e)
+    e.detail.value
+      ? this.getMarkers(this.data.position.latitude, this.data.position.longitude, this.data.index, 1000)
+    : this.getMarkers(this.data.position.latitude, this.data.position.longitude, this.data.index, 500)
   },
   getMarkers (lat, lng, index, distance) {
     var that = this;
+    this.setData({ loading: 'loading' })
     qqmapsdk.search({
       keyword: '餐饮',
       location: {
@@ -47,13 +56,14 @@ Page({
       page_size: 20,
       page_index: index || 1,
       success: function (res) {
-        console.log('success: ', res);
+        // console.log('success: ', res);
         that.setData({
+          loading: '',
           circles: [
             {
               latitude: lat,
               longitude: lng,
-              radius: 500,
+              radius: distance || 500,
               color: '#87CEEBAA',
               fillColor: '#7cb5ec99'
             }
@@ -62,6 +72,7 @@ Page({
             latitude: lat,
             longitude: lng,
           },
+          index,
           pages: Math.floor(res.count / 20),
           markers: res.data.length !== 0
           ? res.data.map((lunch, i) => {
@@ -77,11 +88,11 @@ Page({
         })
       },
       fail: function (res) {
-        console.log('fail: ', res);
+        // console.log('fail: ', res);
         return that.setData({ markers: [] })
       },
       complete: function (res) {
-        console.log('complete: ', res)
+        // console.log('complete: ', res)
       }
     })
   },
@@ -96,7 +107,7 @@ Page({
       success: function () {
         wx.getUserInfo({
           success: function (res) {
-            console.log('login: ', res)
+            // console.log('login: ', res)
             that.setData({
               user: {
                 icon: res.userInfo.avatarUrl,
