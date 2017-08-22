@@ -23,6 +23,13 @@ Page({
     last_z:0,
     polyline: []
   },
+  onShareAppMessage: function () {
+    return {
+      title: 'fkLunch',
+      desc: '解决午饭吃什么这个艰难的选择！',
+      path: '/pages/index/index'
+    }
+  },
   regionchange(e) {
     console.log(e.type)
   },
