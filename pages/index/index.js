@@ -196,7 +196,6 @@ Page({
         return that.setData({ markers: [] })
       },
       complete: function (res) {
-        console.log(res)
         wx.hideLoading()
       }
     })
@@ -229,8 +228,7 @@ Page({
         wx.getLocation({
           type: 'gcj02',
           success: function (res) {
-            console.info('location_gcj02: ', res);
-            console.info('markers: ', that.getMarkers(res.latitude, res.longitude));
+            // console.info('location_gcj02: ', res);
             that.getMarkers(res.latitude, res.longitude)
           },
           fail: function (res) {
