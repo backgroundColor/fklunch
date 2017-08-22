@@ -8,7 +8,9 @@ view {
 .main {
   height: 100%;
   display: flex;
+  display: -webkit-flex;
   flex-direction: column;
+  -webkit-flex-direction: column;
 }
 .user-info {
   height: 30px;
@@ -17,8 +19,12 @@ view {
 }
 
 .mapbox {
+  height: auto;
+  height: calc(100% - 101px);
   flex: 1;
+  -webkit-flex: 1;
   display: flex;
+  display: -webkit-flex;
   position: relative;
 }
 

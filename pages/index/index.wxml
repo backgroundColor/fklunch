@@ -8,10 +8,11 @@
         1000M
       </view>
     </view>
-    <view class="mapbox {{loading}}">
+    <view class="mapbox">
       <map id="map" longitude="{{position.longitude}}" latitude="{{position.latitude}}" scale="16"
       controls="{{controls}}" bindcontroltap="controltap" markers="{{markers}}"
       bindmarkertap="markertap" bindregionchange="regionchange"
+      polyline="{{polyline}}"
       show-location style="width: 100%; height: 100%" circles="{{circles}}" ></map>
     </view>
     <view class="footer">
@@ -21,7 +22,7 @@
         </button>
       </view>
       <view class="right">
-        <button size="small" type="primary">start</button>
+        <button size="small" type="primary" bindtap="pickLunch">start</button>
       </view>
     </view>
   </view>
